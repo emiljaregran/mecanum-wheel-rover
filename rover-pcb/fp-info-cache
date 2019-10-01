@@ -1,4 +1,4 @@
-17005639283384616
+17007209201592528
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -76138,3 +76138,10 @@ Zigbee_Module_MRF24J40MD
 0
 12
 12
+rover-pcb
+SolderWirePad_1x02_SMD_2x4mm
+Wire Pad, Square, SMD Pad,  5mm x 10mm,
+MesurementPoint Square SMDPad 5mmx10mm 
+0
+2
+2
