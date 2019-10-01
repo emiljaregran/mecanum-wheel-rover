@@ -12,7 +12,7 @@
   (page A4)
   (title_block
     (title "Mecanum Wheel Rover")
-    (date 2019-09-30)
+    (date 2019-10-01)
     (rev 1)
     (company "Emil Jaregran")
   )
