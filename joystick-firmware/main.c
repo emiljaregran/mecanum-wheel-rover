@@ -40,7 +40,7 @@ ISR(ADC_vect)
     g_adc_reading[g_adc_input++] = ADCH;
 }
 
-void main (void)
+int main(void)
 {
     data_packet.joystick_x = 0;
     data_packet.joystick_y = 0;
@@ -59,5 +59,7 @@ void main (void)
     for (;;)
     {
     }
+
+    return 0;
 }
 

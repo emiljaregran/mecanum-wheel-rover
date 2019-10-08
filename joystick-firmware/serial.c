@@ -33,7 +33,7 @@ int uart_putchar(char chr, FILE * stream)
 {
     if ('\n' == chr)
     {
-        uart_putchar('\r', NULL);
+        uart_putchar('\r', stream);
     }
     while (!(UCSR0A & (1 << UDRE0)))
     {

@@ -7,21 +7,18 @@ AVRSIZE=avr-size
 MCU=atmega328p
 
 CFLAGS=-Wall -Wextra -Werror -Wstrict-prototypes -Wundef -pedantic \
-		-Os -std=gnu99 -DF_CPU=16000000UL -mmcu=${MCU}
+		-g -Og -std=gnu99 -DF_CPU=16000000UL -mmcu=${MCU}
 LDFLAGS=-mmcu=$(MCU)
 PORT=/dev/ttyACM0
 
-BIN=joystick
+BIN=rover
 
 OUT=${BIN}.elf ${BIN}.hex ${BIN}.lss
 
 SOURCES = \
 		  main.c \
 		  serial.c \
-		  gpio.c \
-		  adc.c \
-		  timer.c \
-		  joystick.c
+		  gpio.c
 
 OBJS = $(SOURCES:.c=.o)
 
@@ -47,7 +44,7 @@ $(OBJS): Makefile
 	$(OBJCOPY) -O ihex -R .fuse -R .lock -R .user_signatures -R .comment $< $@
 
 flash: ${BIN}.hex
-	avrdude -F -V -c arduino -p ${MCU} -P ${PORT} -b 115200 -U flash:w:$<
+	dwdebug l ${BIN}.elf
 
 clean:
 	rm -f $(OUT) $(OBJS) *.map *.P *.d
