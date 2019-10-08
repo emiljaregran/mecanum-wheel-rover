@@ -19,7 +19,8 @@ SOURCES = \
 		  serial.c \
 		  gpio.c \
 		  adc.c \
-		  timer.c
+		  timer.c \
+		  joystick.c
 
 OBJS = $(SOURCES:.c=.o)
 
@@ -48,4 +49,4 @@ flash: ${BIN}.hex
 	avrdude -F -V -c arduino -p ${MCU} -P ${PORT} -b 115200 -U flash:w:$<
 
 clean:
-	rm -f $(OUT) $(OBJS) *.map *.P
+	rm -f $(OUT) $(OBJS) *.map *.P *.d

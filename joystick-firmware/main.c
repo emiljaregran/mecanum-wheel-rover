@@ -1,14 +1,13 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#include <avr/pgmspace.h>
 #include <stdio.h>
-#include <string.h>
 #include <util/delay.h>
 
 #include "adc.h"
 #include "gpio.h"
 #include "serial.h"
 #include "timer.h"
+#include "joystick.h"
 
 ISR(TIMER0_COMPA_vect)
 {
@@ -26,12 +25,16 @@ void main (void)
     gpio_init();
     timer0_init();
     uart_init();
+
     sei();
+
+    _delay_ms(500);
+    joystick_set_center();
 
     for (;;)
     {
         led_blink();
-        printf("X: %03d\tY: %03d\tZ: %03d\r", g_adc_reading[0], g_adc_reading[1], g_adc_reading[2]);
+        printf("X: %04d\tY: %04d\tZ: %04d\r", joystick_get_x(), joystick_get_y(), joystick_get_z());
         _delay_ms(100);
     }
 }
