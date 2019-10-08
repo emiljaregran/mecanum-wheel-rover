@@ -5,6 +5,7 @@
 void gpio_init(void)
 {
     DDRB |= (1 << DDB1);
+    led_off();
 }
 
 void led_blink(void)
