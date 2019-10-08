@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 183)
+    (drawings 184)
     (tracks 513)
     (zones 0)
     (modules 50)
@@ -2340,6 +2340,9 @@
     )
   )
 
+  (gr_text ISP (at 166.116 112.268) (layer F.SilkS)
+    (effects (font (size 2 2) (thickness 0.2)))
+  )
   (gr_line (start 158.369 69.088) (end 158.369 57.785) (layer F.SilkS) (width 0.12))
   (gr_line (start 173.669 69.028) (end 173.6725 57.785) (layer F.SilkS) (width 0.12))
   (gr_text HC-10 (at 165.989 61.214) (layer F.SilkS) (tstamp 5D93B895)
