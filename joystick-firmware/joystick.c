@@ -4,96 +4,55 @@
 #include "adc.h"
 #include "joystick.h"
 
-static uint8_t joystick_center[3];
+static uint8_t joystick_center[JOYSTICK_AXIS_COUNT];
+static int8_t joystick_get_position(const uint8_t axis);
 
 void joystick_set_center(void)
 {
-    // Wait until a valid reading is available.
-    while ((0 == g_adc_reading[0]) && (0 == g_adc_reading[1]) && (0 == g_adc_reading[2]))
-    {
-    }
-
-    for (uint8_t axis = 0; axis < 3; axis++)
+    for (uint8_t axis = 0; axis < JOYSTICK_AXIS_COUNT; axis++)
     {
         joystick_center[axis] = g_adc_reading[axis];
     }
 }
 
-int8_t joystick_get_x(void)
+joystick_data_t joystick_get_data(void)
 {
-    int8_t x_position = 0;
-    int16_t x_movement = (int16_t) g_adc_reading[0] - (int16_t) joystick_center[0];
+    joystick_data_t joystick_data;
 
-    if (abs(x_movement) > JOYSTICK_DEADBAND_X)
-    {
-        if (x_movement > INT8_MAX)
-        {
-            x_position = INT8_MAX;
-        }
-        else if (x_movement < INT8_MIN)
-        {
-            x_position = INT8_MIN;
-        }
-        else
-        {
-            x_position = x_movement;
-        }
-    }
+    joystick_data.x_position = joystick_get_position(JOYSTICK_AXIS_X);
+    joystick_data.y_position = joystick_get_position(JOYSTICK_AXIS_Y);
+    joystick_data.z_position = joystick_get_position(JOYSTICK_AXIS_Z);
 
-    return x_position;
+    return joystick_data;
 }
 
-int8_t joystick_get_y(void)
+static int8_t joystick_get_position(const uint8_t axis)
 {
-    int8_t y_position = 0;
-    int16_t y_movement = (int16_t) g_adc_reading[1] - (int16_t) joystick_center[1];
+    int8_t position = 0;
+    int16_t movement = (int16_t) g_adc_reading[axis] - (int16_t) joystick_center[axis];
 
-    if (abs(y_movement) > JOYSTICK_DEADBAND_Y)
+    if (abs(movement) > JOYSTICK_DEADBAND)
     {
-        if (y_movement > INT8_MAX)
+        // Special fix for wierd scaling on the Z-axis.
+        if ((JOYSTICK_AXIS_Z == axis) && (movement < 0))
         {
-            y_position = INT8_MAX;
+            movement *= 8;
         }
-        else if (y_movement < INT8_MIN)
+
+        if (movement > INT8_MAX)
         {
-            y_position = INT8_MIN;
+            position = INT8_MAX;
+        }
+        else if (movement < INT8_MIN)
+        {
+            position = INT8_MIN;
         }
         else
         {
-            y_position = y_movement;
+            position = movement;
         }
     }
 
-    return y_position;
-}
-
-int8_t joystick_get_z(void)
-
-{
-    int z_position = 0;
-    int16_t z_movement = (int16_t) g_adc_reading[2] - (int16_t) joystick_center[2];
-
-    if (z_movement < -4 || z_movement > 15)
-    {
-        if (z_movement < 0)
-        {
-            z_movement *= 8;
-        }
-
-        if (z_movement > INT8_MAX)
-        {
-            z_position = INT8_MAX;
-        }
-        else if (z_movement < INT8_MIN)
-        {
-            z_position = INT8_MIN;
-        }
-        else
-        {
-            z_position = z_movement;
-        }
-    }
-
-    return z_position;
+    return position;
 }
 
