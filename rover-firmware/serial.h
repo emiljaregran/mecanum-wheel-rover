@@ -7,13 +7,13 @@
 
 typedef struct
 {
-    int8_t x_position;
-    int8_t y_position;
-    int8_t z_position;
-} joystick_data_t;
+    int8_t x;
+    int8_t y;
+    int8_t z;
+} joystick_t;
 
-void uart_init(joystick_data_t * const joystick_data);
-void uart_read_bytes(uint8_t * p_joystick_data, size_t data_length);
+void uart_init(joystick_t * const joystick);
+void uart_read_bytes(uint8_t * p_joystick, size_t data_length);
 
 int uart_putchar(char chr, FILE * stream);
 

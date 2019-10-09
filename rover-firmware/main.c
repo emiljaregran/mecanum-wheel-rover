@@ -10,18 +10,40 @@
 
 int main(void)
 {
-    joystick_data_t joystick_data;
+    joystick_t joystick;
 
     gpio_init();
     stepper_init();
     timer0_init();
-    uart_init(&joystick_data);
+    uart_init(&joystick);
     sei();
 
     for (;;)
     {
-        uart_read_bytes((uint8_t *) &joystick_data, sizeof(joystick_data_t));
+        uart_read_bytes((uint8_t *) &joystick, sizeof(joystick_t));
 
+        // Move sideway east.
+        if ((joystick.x > 0) && (0 == joystick.y) && (0 == joystick.z))
+        {
+            step_sideway_east(255 - (uint8_t) joystick.x);
+        }
+
+        // Move sideway west.
+        else if ((joystick.x < 0) && (0 == joystick.y) && (0 == joystick.z))
+        {
+            step_sideway_west(255 - (uint8_t) (joystick.x * -1));
+        }
+
+        // Stand still.
+        else
+        {
+            step_stop();
+        }
+
+        _delay_ms(5);
+
+
+#if 0
         if (0 == joystick_data.x_position)
         {
             stepper_x_move = 0;
@@ -43,11 +65,11 @@ int main(void)
 
             led_on();
         }
-        else if (joystick_data.y_position > 40)
+        else if (joystick_data.y_position > 0)
         {
             led_on();
         }
-        else if (joystick_data.z_position > 40)
+        else if (joystick_data.z_position > 0)
         {
             led_on();
         }
@@ -68,17 +90,17 @@ int main(void)
 
             led_off();
         }
-        else if (joystick_data.y_position < -40)
+        else if (joystick_data.y_position < 0)
         {
             led_off();
-            PORTD &= ~(1 << STEPPER_1_EN);
         }
-        else if (joystick_data.z_position < -40)
+        else if (joystick_data.z_position < 0)
         {
             led_off();
         }
 
         _delay_ms(5);
+#endif
     }
 
     return 0;

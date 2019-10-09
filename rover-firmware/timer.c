@@ -6,9 +6,24 @@
 
 ISR(TIMER0_COMPA_vect)
 {
-    if (stepper_x_move)
+    if (stepper_1_motion)
     {
-        PIND |= (1 << PIND5);
+        PORTD ^= (1 << STEPPER_1_STEP);
+    }
+
+    if (stepper_2_motion)
+    {
+        PORTD ^= (1 << STEPPER_2_STEP);
+    }
+
+    if (stepper_3_motion)
+    {
+        PORTB ^= (1 << STEPPER_3_STEP);
+    }
+
+    if (stepper_4_motion)
+    {
+        PORTD ^= (1 << STEPPER_4_STEP);
     }
 }
 
