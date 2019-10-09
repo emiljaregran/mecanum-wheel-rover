@@ -19,11 +19,11 @@ ISR(USART_RX_vect)
     buffer[buffer_index++] = UDR0;
 }
 
-void uart_init(data_packet_t * const data_packet)
+void uart_init(joystick_data_t * const joystick_data)
 {
-    data_packet->joystick_x = 0;
-    data_packet->joystick_y = 0;
-    data_packet->joystick_z = 0;
+    joystick_data->x_position = 0;
+    joystick_data->y_position = 0;
+    joystick_data->z_position = 0;
 
     UBRR0H = (unsigned char) (UBRR >> 8);
     UBRR0L = (unsigned char) (UBRR);
@@ -34,13 +34,13 @@ void uart_init(data_packet_t * const data_packet)
     stdout = &uart_stdout;
 }
 
-void uart_read_bytes(uint8_t * p_data_packet, size_t length)
+void uart_read_bytes(uint8_t * p_joystick_data, size_t data_length)
 {
-    if (buffer_index >= length)
+    if (buffer_index >= data_length)
     {
-        for (uint8_t byte = 0; byte < length; byte++)
+        for (uint8_t byte = 0; byte < data_length; byte++)
         {
-           *(p_data_packet++) = buffer[byte];
+           *(p_joystick_data++) = buffer[byte];
         }
 
         buffer_index = 0;
