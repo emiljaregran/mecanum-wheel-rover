@@ -1,7 +1,9 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "gpio.h"
 #include "serial.h"
@@ -22,16 +24,68 @@ int main(void)
     {
         uart_read_bytes((uint8_t *) &joystick, sizeof(joystick_t));
 
-        // Move sideway east.
-        if ((joystick.x > 0) && (0 == joystick.y) && (0 == joystick.z))
+        // Move north.
+        if ((0 == joystick.x) && (joystick.y > 0) && (0 == joystick.z))
         {
-            step_sideway_east(255 - (uint8_t) joystick.x);
+            step_move_north(255 - (uint8_t) joystick.y);
         }
 
-        // Move sideway west.
+        // Move south.
+        else if ((0 == joystick.x) && (joystick.y < 0) && (0 == joystick.z))
+        {
+            step_move_south(255 - (uint8_t) abs(joystick.y));
+        }
+
+        // Move east.
+        else if ((joystick.x > 0) && (0 == joystick.y) && (0 == joystick.z))
+        {
+            step_move_east(255 - (uint8_t) joystick.x);
+        }
+
+        // Move west.
         else if ((joystick.x < 0) && (0 == joystick.y) && (0 == joystick.z))
         {
-            step_sideway_west(255 - (uint8_t) (joystick.x * -1));
+            step_move_west(255 - (uint8_t) abs(joystick.x));
+        }
+
+        // Move north west.
+        else if ((joystick.x < 0) && (joystick.y > 0) && (0 == joystick.z))
+        {
+            double x = (double) abs(joystick.x);
+            double y = (double) joystick.y;
+            uint8_t speed = (uint8_t) ((double) 255 - hypot(x, y));
+
+            step_move_north_west(speed);
+        }
+
+        // Move north east.
+        else if ((joystick.x > 0) && (joystick.y > 0) && (0 == joystick.z))
+        {
+            double x = (double) joystick.x;
+            double y = (double) joystick.y;
+            uint8_t speed = (uint8_t) ((double) 255 - hypot(x, y));
+
+            step_move_north_east(speed);
+        }
+
+        // Move south west.
+        else if ((joystick.x < 0) && (joystick.y < 0) && (0 == joystick.z))
+        {
+            double x = (double) abs(joystick.x);
+            double y = (double) abs(joystick.y);
+            uint8_t speed = (uint8_t) ((double) 255 - hypot(x, y));
+
+            step_move_south_west(speed);
+        }
+
+        // Move south east.
+        else if ((joystick.x > 0) && (joystick.y < 0) && (0 == joystick.z))
+        {
+            double x = (double) joystick.x;
+            double y = (double) abs(joystick.y);
+            uint8_t speed = (uint8_t) ((double) 255 - hypot(x, y));
+
+            step_move_south_east(speed);
         }
 
         // Stand still.
@@ -40,67 +94,7 @@ int main(void)
             step_stop();
         }
 
-        _delay_ms(5);
-
-
-#if 0
-        if (0 == joystick_data.x_position)
-        {
-            stepper_x_move = 0;
-        }
-        else if (joystick_data.x_position > 0)
-        {
-            PORTC &= ~(1 << STEPPER_1_DIR);
-            stepper_x_move = 1;
-            uint8_t speed = 255 - (((uint8_t) joystick_data.x_position) * 2);
-
-            if (speed > 60)
-            {
-                OCR0A = speed;
-            }
-            else
-            {
-                OCR0A = 60;
-            }
-
-            led_on();
-        }
-        else if (joystick_data.y_position > 0)
-        {
-            led_on();
-        }
-        else if (joystick_data.z_position > 0)
-        {
-            led_on();
-        }
-        else if (joystick_data.x_position < 0)
-        {
-            PORTC |= (1 << STEPPER_1_DIR);
-            stepper_x_move = 1;
-            uint8_t speed = 255 - ((uint8_t) (joystick_data.x_position * -2));
-
-            if (speed > 60)
-            {
-                OCR0A = speed;
-            }
-            else
-            {
-                OCR0A = 60;
-            }
-
-            led_off();
-        }
-        else if (joystick_data.y_position < 0)
-        {
-            led_off();
-        }
-        else if (joystick_data.z_position < 0)
-        {
-            led_off();
-        }
-
-        _delay_ms(5);
-#endif
+        _delay_ms(12);
     }
 
     return 0;
