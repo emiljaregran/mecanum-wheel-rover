@@ -4,7 +4,7 @@
 #include "stepper.h"
 #include "timer.h"
 
-volatile uint8_t timer_run_main = 0;
+volatile uint8_t timer_update_movement = 0;
 
 static void timer0_init(void);
 static void timer1_init(void);
@@ -35,7 +35,7 @@ ISR(TIMER0_COMPA_vect)
 
 ISR(TIMER1_COMPA_vect)
 {
-    timer_run_main = 1;
+    timer_update_movement = 1;
 }
 
 ISR(TIMER2_COMPA_vect)
@@ -89,7 +89,8 @@ static void timer1_init(void)
     TCCR1B |= (1 << WGM12);
 
     // Set timer1 TOP to generate 100 Hz interrupts.
-    OCR1A = 625;
+    //OCR1A = 625;
+    OCR1A = 312;
 
     // Compare Match A interrupt enable.
     TIMSK1 |= (1 << OCIE1A);

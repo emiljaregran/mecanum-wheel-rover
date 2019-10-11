@@ -21,6 +21,9 @@ static void rover_rotate_cw(const uint8_t target_speed);
 static void rover_rotate_ccw(const uint8_t target_speed);
 
 static void rover_move_north_turn_cw(const uint8_t fast_speed, const uint8_t slow_speed);
+static void rover_move_north_turn_ccw(const uint8_t fast_speed, const uint8_t slow_speed);
+static void rover_move_south_turn_cw(const uint8_t fast_speed, const uint8_t slow_speed);
+static void rover_move_south_turn_ccw(const uint8_t fast_speed, const uint8_t slow_speed);
 
 static void rover_stop(void);
 
@@ -102,23 +105,41 @@ void rover_movement(const joystick_t * const joystick)
         rover_rotate_ccw(255 - ((uint8_t) abs(joystick->z) * 3));
     }
 
-    // Move forward and turn right.
+    // Move forward and turn clockwise.
     else if ((0 == joystick->x) && (joystick->y > 0) && (joystick->z > 30))
     {
-        uint8_t fast_speed = 255 - ((uint8_t) joystick->y * 2);
-        uint8_t slow_speed = 255 - ((uint8_t) joystick->z * 2);
+        uint8_t fast_speed = 255 - ((uint8_t) joystick->z * 3);
+        uint8_t slow_speed = 255 - ((uint8_t) joystick->y * 2);
 
         rover_move_north_turn_cw(fast_speed, slow_speed);
     }
 
-    // Move forward and turn left.
+    // Move forward and turn counterclockwise.
+    else if ((0 == joystick->x) && (joystick->y > 0) && (joystick->z < -20))
+    {
+        uint8_t fast_speed = 255 - ((uint8_t) abs(joystick->z) * 4);
+        uint8_t slow_speed = 255 - ((uint8_t) joystick->y * 2);
 
+        rover_move_north_turn_ccw(fast_speed, slow_speed);
+    }
 
     // Move backward and turn right.
+    else if ((0 == joystick->x) && (joystick->y < 0) && (joystick->z > 30))
+    {
+        uint8_t fast_speed = 255 - ((uint8_t) joystick->z * 3);
+        uint8_t slow_speed = 255 - ((uint8_t) abs(joystick->y) * 2);
 
+        rover_move_south_turn_cw(fast_speed, slow_speed);
+    }
 
     // Move backward and turn left.
+    else if ((0 == joystick->x) && (joystick->y < 0) && (joystick->z < -20))
+    {
+        uint8_t fast_speed = 255 - ((uint8_t) abs(joystick->z) * 5);
+        uint8_t slow_speed = 255 - ((uint8_t) abs(joystick->y) * 2);
 
+        rover_move_south_turn_ccw(fast_speed, slow_speed);
+    }
 
     // Stand still.
     else
@@ -445,6 +466,135 @@ static void rover_move_north_turn_cw(const uint8_t fast_speed, const uint8_t slo
         stepper_set_direction(STEPPER_2_DIR, STEPPER_FORWARD);
         stepper_set_direction(STEPPER_3_DIR, STEPPER_FORWARD);
         stepper_set_direction(STEPPER_4_DIR, STEPPER_FORWARD);
+
+        stepper_speed.stepper_1_fast = STEPPER_MOVE;
+        stepper_speed.stepper_2_slow = STEPPER_MOVE;
+        stepper_speed.stepper_3_fast = STEPPER_MOVE;
+        stepper_speed.stepper_4_slow = STEPPER_MOVE;
+    }
+
+    if ((fast_speed < current_fast_speed) && (current_fast_speed > ROVER_SPEED_LIMIT))
+    {
+        current_fast_speed--;
+    }
+    else if (fast_speed > current_fast_speed)
+    {
+        current_fast_speed++;
+    }
+
+    if ((slow_speed < current_slow_speed) && (current_slow_speed > ROVER_SPEED_LIMIT))
+    {
+        current_slow_speed--;
+    }
+    else if (slow_speed > current_slow_speed)
+    {
+        current_slow_speed++;
+    }
+
+    OCR0A = current_fast_speed;
+    OCR2A = current_slow_speed;
+}
+
+static void rover_move_north_turn_ccw(const uint8_t fast_speed, const uint8_t slow_speed)
+{
+    uint8_t current_fast_speed = OCR0A;
+    uint8_t current_slow_speed = OCR2A;
+
+    if (prev_dir != PREV_DIR_NORTH_TURN_CCW)
+    {
+        prev_dir = PREV_DIR_NORTH_TURN_CCW;
+
+        stepper_stop_all();
+        stepper_set_direction(STEPPER_1_DIR, STEPPER_FORWARD);
+        stepper_set_direction(STEPPER_2_DIR, STEPPER_FORWARD);
+        stepper_set_direction(STEPPER_3_DIR, STEPPER_FORWARD);
+        stepper_set_direction(STEPPER_4_DIR, STEPPER_FORWARD);
+
+        stepper_speed.stepper_1_slow = STEPPER_MOVE;
+        stepper_speed.stepper_2_fast = STEPPER_MOVE;
+        stepper_speed.stepper_3_slow = STEPPER_MOVE;
+        stepper_speed.stepper_4_fast = STEPPER_MOVE;
+    }
+
+    if ((fast_speed < current_fast_speed) && (current_fast_speed > ROVER_SPEED_LIMIT))
+    {
+        current_fast_speed--;
+    }
+    else if (fast_speed > current_fast_speed)
+    {
+        current_fast_speed++;
+    }
+
+    if ((slow_speed < current_slow_speed) && (current_slow_speed > ROVER_SPEED_LIMIT))
+    {
+        current_slow_speed--;
+    }
+    else if (slow_speed > current_slow_speed)
+    {
+        current_slow_speed++;
+    }
+
+    OCR0A = current_fast_speed;
+    OCR2A = current_slow_speed;
+}
+
+static void rover_move_south_turn_cw(const uint8_t fast_speed, const uint8_t slow_speed)
+{
+    uint8_t current_fast_speed = OCR0A;
+    uint8_t current_slow_speed = OCR2A;
+
+    if (prev_dir != PREV_DIR_SOUTH_TURN_CW)
+    {
+        prev_dir = PREV_DIR_SOUTH_TURN_CW;
+
+        stepper_stop_all();
+        stepper_set_direction(STEPPER_1_DIR, STEPPER_BACKWARD);
+        stepper_set_direction(STEPPER_2_DIR, STEPPER_BACKWARD);
+        stepper_set_direction(STEPPER_3_DIR, STEPPER_BACKWARD);
+        stepper_set_direction(STEPPER_4_DIR, STEPPER_BACKWARD);
+
+        stepper_speed.stepper_1_fast = STEPPER_MOVE;
+        stepper_speed.stepper_2_slow = STEPPER_MOVE;
+        stepper_speed.stepper_3_fast = STEPPER_MOVE;
+        stepper_speed.stepper_4_slow = STEPPER_MOVE;
+    }
+
+    if ((fast_speed < current_fast_speed) && (current_fast_speed > ROVER_SPEED_LIMIT))
+    {
+        current_fast_speed--;
+    }
+    else if (fast_speed > current_fast_speed)
+    {
+        current_fast_speed++;
+    }
+
+    if ((slow_speed < current_slow_speed) && (current_slow_speed > ROVER_SPEED_LIMIT))
+    {
+        current_slow_speed--;
+    }
+    else if (slow_speed > current_slow_speed)
+    {
+        current_slow_speed++;
+    }
+
+    OCR0A = current_fast_speed;
+    OCR2A = current_slow_speed;
+}
+
+static void rover_move_south_turn_ccw(const uint8_t fast_speed, const uint8_t slow_speed)
+{
+    uint8_t current_fast_speed = OCR0A;
+    uint8_t current_slow_speed = OCR2A;
+
+    if (prev_dir != PREV_DIR_SOUTH_TURN_CCW)
+    {
+        prev_dir = PREV_DIR_SOUTH_TURN_CCW;
+
+        stepper_stop_all();
+        stepper_set_direction(STEPPER_1_DIR, STEPPER_BACKWARD);
+        stepper_set_direction(STEPPER_2_DIR, STEPPER_BACKWARD);
+        stepper_set_direction(STEPPER_3_DIR, STEPPER_BACKWARD);
+        stepper_set_direction(STEPPER_4_DIR, STEPPER_BACKWARD);
 
         stepper_speed.stepper_1_slow = STEPPER_MOVE;
         stepper_speed.stepper_2_fast = STEPPER_MOVE;

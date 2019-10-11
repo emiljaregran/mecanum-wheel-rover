@@ -23,9 +23,9 @@ int main(void)
     {
         uart_read_struct((uint8_t *) &joystick, sizeof(joystick_t));
 
-        if (timer_run_main)
+        if (timer_update_movement)
         {
-            timer_run_main = 0;
+            timer_update_movement = 0;
             rover_movement(&joystick);
         }
     }
