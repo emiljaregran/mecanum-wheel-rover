@@ -19,22 +19,16 @@ typedef enum
     PREV_DIR_STOP
 } PREV_DIR_t;
 
-void rover_move_north(const uint8_t target_speed);
-void rover_move_south(const uint8_t target_speed);
-void rover_move_west(const uint8_t target_speed);
-void rover_move_east(const uint8_t target_speed);
+typedef struct
+{
+    int8_t x;
+    int8_t y;
+    int8_t z;
+} joystick_t;
 
-void rover_move_north_west(const uint8_t target_speed);
-void rover_move_north_east(const uint8_t target_speed);
-void rover_move_south_west(const uint8_t target_speed);
-void rover_move_south_east(const uint8_t target_speed);
+extern joystick_t joystick;
 
-void rover_rotate_cw(const uint8_t target_speed);
-void rover_rotate_ccw(const uint8_t target_speed);
-
-void rover_move_north_turn_cw(const uint8_t fast_speed, const uint8_t slow_speed);
-
-void rover_stop(void);
+void rover_movement(const joystick_t const * joystick);
 
 #endif // ROVER_H
 

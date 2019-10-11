@@ -13,7 +13,7 @@ stepper_speed_t stepper_speed = {
     .stepper_4_slow = STEPPER_STOP
 };
 
-void stepper_init(void)
+void steppers_init(void)
 {
     DDRB |= ((1 << DDB3) | (1 << DDB0));
     DDRC |= ((1 << DDC3) | (1 << DDC2) | (1 << DDC1) | (1 << DDC0));

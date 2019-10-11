@@ -6,6 +6,10 @@
 
 volatile uint8_t timer_run_main = 0;
 
+static void timer0_init(void);
+static void timer1_init(void);
+static void timer2_init(void);
+
 ISR(TIMER0_COMPA_vect)
 {
     if (stepper_speed.stepper_1_fast)
@@ -57,7 +61,14 @@ ISR(TIMER2_COMPA_vect)
     }
 }
 
-void timer0_init(void)
+void timers_init(void)
+{
+    timer0_init();
+    timer1_init();
+    timer2_init();
+}
+
+static void timer0_init(void)
 {
     // Timer0 CTC mode.
     TCCR0A |= (1 << WGM01);
@@ -72,7 +83,7 @@ void timer0_init(void)
     TCCR0B |= ((1 << CS01) | (1 << CS00));
 }
 
-void timer1_init(void)
+static void timer1_init(void)
 {
     // Timer1 CTC mode.
     TCCR1B |= (1 << WGM12);
@@ -87,7 +98,7 @@ void timer1_init(void)
     TCCR1B |= (1 << CS12);
 }
 
-void timer2_init(void)
+static void timer2_init(void)
 {
     // Timer2 CTC mode.
     TCCR2A |= (1 << WGM21);

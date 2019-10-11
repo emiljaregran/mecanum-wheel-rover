@@ -36,7 +36,7 @@ typedef struct
 
 extern stepper_speed_t stepper_speed;
 
-void stepper_init(void);
+void steppers_init(void);
 void stepper_set_direction(const uint8_t stepper, const uint8_t direction);
 void stepper_stop_all(void);
 

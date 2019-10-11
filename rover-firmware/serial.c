@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+#include "rover.h"
 #include "serial.h"
 
 static volatile uint8_t buffer[BUFFER_SIZE];
@@ -34,7 +35,7 @@ void uart_init(joystick_t * const joystick)
     stdout = &uart_stdout;
 }
 
-void uart_read_bytes(uint8_t * p_joystick, size_t data_length)
+void uart_read_struct(uint8_t * p_joystick, size_t data_length)
 {
     if (buffer_index >= data_length)
     {
