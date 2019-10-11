@@ -2,10 +2,16 @@
 
 #include "stepper.h"
 
-uint8_t stepper_1_motion = STEPPER_STOP;
-uint8_t stepper_2_motion = STEPPER_STOP;
-uint8_t stepper_3_motion = STEPPER_STOP;
-uint8_t stepper_4_motion = STEPPER_STOP;
+stepper_speed_t stepper_speed = {
+    .stepper_1_fast = STEPPER_STOP,
+    .stepper_1_slow = STEPPER_STOP,
+    .stepper_2_fast = STEPPER_STOP,
+    .stepper_2_slow = STEPPER_STOP,
+    .stepper_3_fast = STEPPER_STOP,
+    .stepper_3_slow = STEPPER_STOP,
+    .stepper_4_fast = STEPPER_STOP,
+    .stepper_4_slow = STEPPER_STOP
+};
 
 void stepper_init(void)
 {
@@ -30,6 +36,7 @@ void stepper_set_direction(const uint8_t stepper, const uint8_t direction)
 
 void step_move_north(const uint8_t speed)
 {
+    stepper_stop_all();
     stepper_set_direction(STEPPER_1_DIR, STEPPER_FORWARD);
     stepper_set_direction(STEPPER_2_DIR, STEPPER_FORWARD);
     stepper_set_direction(STEPPER_3_DIR, STEPPER_FORWARD);
@@ -44,14 +51,15 @@ void step_move_north(const uint8_t speed)
         OCR0A = 60;
     }
 
-    stepper_1_motion = STEPPER_MOVE;
-    stepper_2_motion = STEPPER_MOVE;
-    stepper_3_motion = STEPPER_MOVE;
-    stepper_4_motion = STEPPER_MOVE;
+    stepper_speed.stepper_1_fast = STEPPER_MOVE;
+    stepper_speed.stepper_2_fast = STEPPER_MOVE;
+    stepper_speed.stepper_3_fast = STEPPER_MOVE;
+    stepper_speed.stepper_4_fast = STEPPER_MOVE;
 }
 
 void step_move_south(const uint8_t speed)
 {
+    stepper_stop_all();
     stepper_set_direction(STEPPER_1_DIR, STEPPER_BACKWARD);
     stepper_set_direction(STEPPER_2_DIR, STEPPER_BACKWARD);
     stepper_set_direction(STEPPER_3_DIR, STEPPER_BACKWARD);
@@ -66,14 +74,15 @@ void step_move_south(const uint8_t speed)
         OCR0A = 60;
     }
 
-    stepper_1_motion = STEPPER_MOVE;
-    stepper_2_motion = STEPPER_MOVE;
-    stepper_3_motion = STEPPER_MOVE;
-    stepper_4_motion = STEPPER_MOVE;
+    stepper_speed.stepper_1_fast = STEPPER_MOVE;
+    stepper_speed.stepper_2_fast = STEPPER_MOVE;
+    stepper_speed.stepper_3_fast = STEPPER_MOVE;
+    stepper_speed.stepper_4_fast = STEPPER_MOVE;
 }
 
 void step_move_east(const uint8_t speed)
 {
+    stepper_stop_all();
     stepper_set_direction(STEPPER_1_DIR, STEPPER_FORWARD);
     stepper_set_direction(STEPPER_2_DIR, STEPPER_BACKWARD);
     stepper_set_direction(STEPPER_3_DIR, STEPPER_BACKWARD);
@@ -88,14 +97,15 @@ void step_move_east(const uint8_t speed)
         OCR0A = 60;
     }
 
-    stepper_1_motion = STEPPER_MOVE;
-    stepper_2_motion = STEPPER_MOVE;
-    stepper_3_motion = STEPPER_MOVE;
-    stepper_4_motion = STEPPER_MOVE;
+    stepper_speed.stepper_1_fast = STEPPER_MOVE;
+    stepper_speed.stepper_2_fast = STEPPER_MOVE;
+    stepper_speed.stepper_3_fast = STEPPER_MOVE;
+    stepper_speed.stepper_4_fast = STEPPER_MOVE;
 }
 
 void step_move_west(const uint8_t speed)
 {
+    stepper_stop_all();
     stepper_set_direction(STEPPER_1_DIR, STEPPER_BACKWARD);
     stepper_set_direction(STEPPER_2_DIR, STEPPER_FORWARD);
     stepper_set_direction(STEPPER_3_DIR, STEPPER_FORWARD);
@@ -110,14 +120,15 @@ void step_move_west(const uint8_t speed)
         OCR0A = 60;
     }
 
-    stepper_1_motion = STEPPER_MOVE;
-    stepper_2_motion = STEPPER_MOVE;
-    stepper_3_motion = STEPPER_MOVE;
-    stepper_4_motion = STEPPER_MOVE;
+    stepper_speed.stepper_1_fast = STEPPER_MOVE;
+    stepper_speed.stepper_2_fast = STEPPER_MOVE;
+    stepper_speed.stepper_3_fast = STEPPER_MOVE;
+    stepper_speed.stepper_4_fast = STEPPER_MOVE;
 }
 
 void step_move_north_west(const uint8_t speed)
 {
+    stepper_stop_all();
     stepper_set_direction(STEPPER_2_DIR, STEPPER_FORWARD);
     stepper_set_direction(STEPPER_3_DIR, STEPPER_FORWARD);
 
@@ -130,12 +141,13 @@ void step_move_north_west(const uint8_t speed)
         OCR0A = 60;
     }
 
-    stepper_2_motion = STEPPER_MOVE;
-    stepper_3_motion = STEPPER_MOVE;
+    stepper_speed.stepper_2_fast = STEPPER_MOVE;
+    stepper_speed.stepper_3_fast = STEPPER_MOVE;
 }
 
 void step_move_north_east(const uint8_t speed)
 {
+    stepper_stop_all();
     stepper_set_direction(STEPPER_1_DIR, STEPPER_FORWARD);
     stepper_set_direction(STEPPER_4_DIR, STEPPER_FORWARD);
 
@@ -148,12 +160,13 @@ void step_move_north_east(const uint8_t speed)
         OCR0A = 60;
     }
 
-    stepper_1_motion = STEPPER_MOVE;
-    stepper_4_motion = STEPPER_MOVE;
+    stepper_speed.stepper_1_fast = STEPPER_MOVE;
+    stepper_speed.stepper_4_fast = STEPPER_MOVE;
 }
 
 void step_move_south_west(const uint8_t speed)
 {
+    stepper_stop_all();
     stepper_set_direction(STEPPER_1_DIR, STEPPER_BACKWARD);
     stepper_set_direction(STEPPER_4_DIR, STEPPER_BACKWARD);
 
@@ -166,12 +179,13 @@ void step_move_south_west(const uint8_t speed)
         OCR0A = 60;
     }
 
-    stepper_1_motion = STEPPER_MOVE;
-    stepper_4_motion = STEPPER_MOVE;
+    stepper_speed.stepper_1_fast = STEPPER_MOVE;
+    stepper_speed.stepper_4_fast = STEPPER_MOVE;
 }
 
 void step_move_south_east(const uint8_t speed)
 {
+    stepper_stop_all();
     stepper_set_direction(STEPPER_2_DIR, STEPPER_BACKWARD);
     stepper_set_direction(STEPPER_3_DIR, STEPPER_BACKWARD);
 
@@ -184,15 +198,65 @@ void step_move_south_east(const uint8_t speed)
         OCR0A = 60;
     }
 
-    stepper_2_motion = STEPPER_MOVE;
-    stepper_3_motion = STEPPER_MOVE;
+    stepper_speed.stepper_2_fast = STEPPER_MOVE;
+    stepper_speed.stepper_3_fast = STEPPER_MOVE;
 }
 
-void step_stop(void)
+void step_rotate_cw(const uint8_t speed)
 {
-    stepper_1_motion = STEPPER_STOP;
-    stepper_2_motion = STEPPER_STOP;
-    stepper_3_motion = STEPPER_STOP;
-    stepper_4_motion = STEPPER_STOP;
+    stepper_stop_all();
+    stepper_set_direction(STEPPER_1_DIR, STEPPER_FORWARD);
+    stepper_set_direction(STEPPER_2_DIR, STEPPER_BACKWARD);
+    stepper_set_direction(STEPPER_3_DIR, STEPPER_FORWARD);
+    stepper_set_direction(STEPPER_4_DIR, STEPPER_BACKWARD);
+
+    if (speed > 120)
+    {
+        OCR0A = speed;
+    }
+    else
+    {
+        OCR0A = 120;
+    }
+
+    stepper_speed.stepper_1_fast = STEPPER_MOVE;
+    stepper_speed.stepper_2_fast = STEPPER_MOVE;
+    stepper_speed.stepper_3_fast = STEPPER_MOVE;
+    stepper_speed.stepper_4_fast = STEPPER_MOVE;
+}
+
+void step_rotate_ccw(const uint8_t speed)
+{
+    stepper_stop_all();
+    stepper_set_direction(STEPPER_1_DIR, STEPPER_BACKWARD);
+    stepper_set_direction(STEPPER_2_DIR, STEPPER_FORWARD);
+    stepper_set_direction(STEPPER_3_DIR, STEPPER_BACKWARD);
+    stepper_set_direction(STEPPER_4_DIR, STEPPER_FORWARD);
+
+    if (speed > 120)
+    {
+        OCR0A = speed;
+    }
+    else
+    {
+        OCR0A = 120;
+    }
+
+    stepper_speed.stepper_1_fast = STEPPER_MOVE;
+    stepper_speed.stepper_2_fast = STEPPER_MOVE;
+    stepper_speed.stepper_3_fast = STEPPER_MOVE;
+    stepper_speed.stepper_4_fast = STEPPER_MOVE;
+}
+
+void stepper_stop_all(void)
+{
+    stepper_speed.stepper_1_fast = STEPPER_STOP;
+    stepper_speed.stepper_1_slow = STEPPER_STOP;
+    stepper_speed.stepper_2_fast = STEPPER_STOP;
+    stepper_speed.stepper_2_slow = STEPPER_STOP;
+    stepper_speed.stepper_3_fast = STEPPER_STOP;
+    stepper_speed.stepper_3_slow = STEPPER_STOP;
+    stepper_speed.stepper_4_fast = STEPPER_STOP;
+    stepper_speed.stepper_4_slow = STEPPER_STOP;
 }
 

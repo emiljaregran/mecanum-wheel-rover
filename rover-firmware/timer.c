@@ -6,22 +6,22 @@
 
 ISR(TIMER0_COMPA_vect)
 {
-    if (stepper_1_motion)
+    if (stepper_speed.stepper_1_fast)
     {
         PORTD ^= (1 << STEPPER_1_STEP);
     }
 
-    if (stepper_2_motion)
+    if (stepper_speed.stepper_2_fast)
     {
         PORTD ^= (1 << STEPPER_2_STEP);
     }
 
-    if (stepper_3_motion)
+    if (stepper_speed.stepper_3_fast)
     {
         PORTB ^= (1 << STEPPER_3_STEP);
     }
 
-    if (stepper_4_motion)
+    if (stepper_speed.stepper_4_fast)
     {
         PORTD ^= (1 << STEPPER_4_STEP);
     }

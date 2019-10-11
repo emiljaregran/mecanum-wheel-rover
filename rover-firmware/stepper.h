@@ -22,10 +22,19 @@
 #define STEPPER_FORWARD     0
 #define STEPPER_BACKWARD    1
 
-extern uint8_t stepper_1_motion;
-extern uint8_t stepper_2_motion;
-extern uint8_t stepper_3_motion;
-extern uint8_t stepper_4_motion;
+typedef struct
+{
+    uint8_t stepper_1_fast : 1;
+    uint8_t stepper_1_slow : 1;
+    uint8_t stepper_2_fast : 1;
+    uint8_t stepper_2_slow : 1;
+    uint8_t stepper_3_fast : 1;
+    uint8_t stepper_3_slow : 1;
+    uint8_t stepper_4_fast : 1;
+    uint8_t stepper_4_slow : 1;
+} stepper_speed_t;
+
+extern stepper_speed_t stepper_speed;
 
 void stepper_init(void);
 void stepper_set_direction(const uint8_t stepper, const uint8_t direction);
@@ -38,7 +47,10 @@ void step_move_north_west(const uint8_t speed);
 void step_move_north_east(const uint8_t speed);
 void step_move_south_west(const uint8_t speed);
 void step_move_south_east(const uint8_t speed);
-void step_stop(void);
+void step_rotate_cw(const uint8_t speed);
+void step_rotate_ccw(const uint8_t speed);
+
+void stepper_stop_all(void);
 
 #endif // STEPPER_H
 
