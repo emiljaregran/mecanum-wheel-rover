@@ -38,18 +38,6 @@ extern stepper_speed_t stepper_speed;
 
 void stepper_init(void);
 void stepper_set_direction(const uint8_t stepper, const uint8_t direction);
-
-void step_move_north(const uint8_t speed);
-void step_move_south(const uint8_t speed);
-void step_move_east(const uint8_t speed);
-void step_move_west(const uint8_t speed);
-void step_move_north_west(const uint8_t speed);
-void step_move_north_east(const uint8_t speed);
-void step_move_south_west(const uint8_t speed);
-void step_move_south_east(const uint8_t speed);
-void step_rotate_cw(const uint8_t speed);
-void step_rotate_ccw(const uint8_t speed);
-
 void stepper_stop_all(void);
 
 #endif // STEPPER_H

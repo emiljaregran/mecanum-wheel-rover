@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "gpio.h"
+#include "rover.h"
 #include "serial.h"
 #include "stepper.h"
 #include "timer.h"
@@ -27,25 +28,25 @@ int main(void)
         // Move north.
         if ((0 == joystick.x) && (joystick.y > 0) && (0 == joystick.z))
         {
-            step_move_north(255 - (uint8_t) joystick.y);
+            rover_move_north(255 - (uint8_t) joystick.y);
         }
 
         // Move south.
         else if ((0 == joystick.x) && (joystick.y < 0) && (0 == joystick.z))
         {
-            step_move_south(255 - (uint8_t) abs(joystick.y));
+            rover_move_south(255 - (uint8_t) abs(joystick.y));
         }
 
         // Move east.
         else if ((joystick.x > 0) && (0 == joystick.y) && (0 == joystick.z))
         {
-            step_move_east(255 - (uint8_t) joystick.x);
+            rover_move_east(255 - (uint8_t) joystick.x);
         }
 
         // Move west.
         else if ((joystick.x < 0) && (0 == joystick.y) && (0 == joystick.z))
         {
-            step_move_west(255 - (uint8_t) abs(joystick.x));
+            rover_move_west(255 - (uint8_t) abs(joystick.x));
         }
 
         // Move north west.
@@ -55,7 +56,7 @@ int main(void)
             double y = (double) joystick.y;
             uint8_t speed = (uint8_t) ((double) 255 - hypot(x, y));
 
-            step_move_north_west(speed);
+            rover_move_north_west(speed);
         }
 
         // Move north east.
@@ -65,7 +66,7 @@ int main(void)
             double y = (double) joystick.y;
             uint8_t speed = (uint8_t) ((double) 255 - hypot(x, y));
 
-            step_move_north_east(speed);
+            rover_move_north_east(speed);
         }
 
         // Move south west.
@@ -75,7 +76,7 @@ int main(void)
             double y = (double) abs(joystick.y);
             uint8_t speed = (uint8_t) ((double) 255 - hypot(x, y));
 
-            step_move_south_west(speed);
+            rover_move_south_west(speed);
         }
 
         // Move south east.
@@ -85,19 +86,19 @@ int main(void)
             double y = (double) abs(joystick.y);
             uint8_t speed = (uint8_t) ((double) 255 - hypot(x, y));
 
-            step_move_south_east(speed);
+            rover_move_south_east(speed);
         }
 
         // Rotate clockwise.
         else if ((0 == joystick.x) && (0 == joystick.y) && (joystick.z > 30))
         {
-            step_rotate_cw(255 - (uint8_t) joystick.z);
+            rover_rotate_cw(255 - (uint8_t) joystick.z);
         }
 
         // Rotate counterclockwise.
         else if ((0 == joystick.x) && (0 == joystick.y) && (joystick.z < -20))
         {
-            step_rotate_ccw(255 - (uint8_t) abs(joystick.z));
+            rover_rotate_ccw(255 - (uint8_t) abs(joystick.z));
         }
 
         // Move forward and turn right.

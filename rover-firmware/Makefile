@@ -19,6 +19,7 @@ SOURCES = \
 		  main.c \
 		  serial.c \
 		  gpio.c \
+		  rover.c \
 		  stepper.c \
 		  timer.c
 
