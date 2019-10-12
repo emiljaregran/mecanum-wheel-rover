@@ -7,150 +7,94 @@
 
 static PREV_DIR_t prev_dir = PREV_DIR_STOP;
 
-static void rover_move_north(const uint8_t target_speed);
-static void rover_move_south(const uint8_t target_speed);
-static void rover_move_west(const uint8_t target_speed);
-static void rover_move_east(const uint8_t target_speed);
+static void rover_move_north(const int8_t joystick_y);
+static void rover_move_south(const int8_t joystick_y);
+static void rover_move_west(const int8_t joystick_x);
+static void rover_move_east(const int8_t joystick_x);
 
-static void rover_move_north_west(const uint8_t target_speed);
-static void rover_move_north_east(const uint8_t target_speed);
-static void rover_move_south_west(const uint8_t target_speed);
-static void rover_move_south_east(const uint8_t target_speed);
+static void rover_move_north_west(const int8_t joystick_x, const int8_t joystick_y);
+static void rover_move_north_east(const int8_t joystick_x, const int8_t joystick_y);
+static void rover_move_south_west(const int8_t joystick_x, const int8_t joystick_y);
+static void rover_move_south_east(const int8_t joystick_x, const int8_t joystick_y);
 
-static void rover_rotate_cw(const uint8_t target_speed);
-static void rover_rotate_ccw(const uint8_t target_speed);
+static void rover_rotate_cw(const int8_t joystick_z);
+static void rover_rotate_ccw(const int8_t joystick_z);
 
-static void rover_move_north_turn_cw(const uint8_t fast_speed, const uint8_t slow_speed);
-static void rover_move_north_turn_ccw(const uint8_t fast_speed, const uint8_t slow_speed);
-static void rover_move_south_turn_cw(const uint8_t fast_speed, const uint8_t slow_speed);
-static void rover_move_south_turn_ccw(const uint8_t fast_speed, const uint8_t slow_speed);
+static void rover_move_north_turn_cw(const int8_t joystick_y, const int8_t joystick_z);
+static void rover_move_north_turn_ccw(const int8_t joystick_y, const int8_t joystick_z);
+static void rover_move_south_turn_cw(const int8_t joystick_y, const int8_t joystick_z);
+static void rover_move_south_turn_ccw(const int8_t joystick_y, const int8_t joystick_z);
 
 static void rover_stop(void);
 
 void rover_movement(const joystick_t * const joystick)
 {
-    // Move north.
     if ((0 == joystick->x) && (joystick->y > 0) && (0 == joystick->z))
     {
-        rover_move_north(255 - ((uint8_t) joystick->y * 2));
+        rover_move_north(joystick->y);
     }
-
-    // Move south.
     else if ((0 == joystick->x) && (joystick->y < 0) && (0 == joystick->z))
     {
-        rover_move_south(255 - ((uint8_t) abs(joystick->y) * 2));
+        rover_move_south(joystick->y);
     }
-
-    // Move west.
     else if ((joystick->x < 0) && (0 == joystick->y) && (0 == joystick->z))
     {
-        rover_move_west(255 - ((uint8_t) abs(joystick->x) * 2));
+        rover_move_west(joystick->x);
     }
-
-    // Move east.
     else if ((joystick->x > 0) && (0 == joystick->y) && (0 == joystick->z))
     {
-        rover_move_east(255 - ((uint8_t) joystick->x * 2));
+        rover_move_east(joystick->x);
     }
-
-    // Move north west.
     else if ((joystick->x < 0) && (joystick->y > 0) && (0 == joystick->z))
     {
-        double x = (double) abs(joystick->x);
-        double y = (double) joystick->y;
-        uint8_t target_speed = (uint8_t) ((double) 255 - hypot(x, y));
-
-        rover_move_north_west(target_speed);
+        rover_move_north_west(joystick->x, joystick->y);
     }
-
-    // Move north east.
     else if ((joystick->x > 0) && (joystick->y > 0) && (0 == joystick->z))
     {
-        double x = (double) joystick->x;
-        double y = (double) joystick->y;
-        uint8_t target_speed = (uint8_t) ((double) 255 - hypot(x, y));
-
-        rover_move_north_east(target_speed);
+        rover_move_north_east(joystick->x, joystick->y);
     }
-
-    // Move south west.
     else if ((joystick->x < 0) && (joystick->y < 0) && (0 == joystick->z))
     {
-        double x = (double) abs(joystick->x);
-        double y = (double) abs(joystick->y);
-        uint8_t target_speed = (uint8_t) ((double) 255 - hypot(x, y));
-
-        rover_move_south_west(target_speed);
+        rover_move_south_west(joystick->x, joystick->y);
     }
-
-    // Move south east.
     else if ((joystick->x > 0) && (joystick->y < 0) && (0 == joystick->z))
     {
-        double x = (double) joystick->x;
-        double y = (double) abs(joystick->y);
-        uint8_t target_speed = (uint8_t) ((double) 255 - hypot(x, y));
-
-        rover_move_south_east(target_speed);
+        rover_move_south_east(joystick->x, joystick->y);
     }
-
-    // Rotate clockwise.
     else if ((0 == joystick->x) && (0 == joystick->y) && (joystick->z > 30))
     {
-        rover_rotate_cw(255 - ((uint8_t) joystick->z * 2));
+        rover_rotate_cw(joystick->z);
     }
-
-    // Rotate counterclockwise.
     else if ((0 == joystick->x) && (0 == joystick->y) && (joystick->z < -20))
     {
-        rover_rotate_ccw(255 - ((uint8_t) abs(joystick->z) * 3));
+        rover_rotate_ccw(joystick->z);
     }
-
-    // Move forward and turn clockwise.
     else if ((0 == joystick->x) && (joystick->y > 0) && (joystick->z > 30))
     {
-        uint8_t fast_speed = 255 - ((uint8_t) joystick->z * 3);
-        uint8_t slow_speed = 255 - ((uint8_t) joystick->y * 2);
-
-        rover_move_north_turn_cw(fast_speed, slow_speed);
+        rover_move_north_turn_cw(joystick->y, joystick->z);
     }
-
-    // Move forward and turn counterclockwise.
     else if ((0 == joystick->x) && (joystick->y > 0) && (joystick->z < -20))
     {
-        uint8_t fast_speed = 255 - ((uint8_t) abs(joystick->z) * 4);
-        uint8_t slow_speed = 255 - ((uint8_t) joystick->y * 2);
-
-        rover_move_north_turn_ccw(fast_speed, slow_speed);
+        rover_move_north_turn_ccw(joystick->y, joystick->z);
     }
-
-    // Move backward and turn right.
     else if ((0 == joystick->x) && (joystick->y < 0) && (joystick->z > 30))
     {
-        uint8_t fast_speed = 255 - ((uint8_t) joystick->z * 3);
-        uint8_t slow_speed = 255 - ((uint8_t) abs(joystick->y) * 2);
-
-        rover_move_south_turn_cw(fast_speed, slow_speed);
+        rover_move_south_turn_cw(joystick->y, joystick->z);
     }
-
-    // Move backward and turn left.
     else if ((0 == joystick->x) && (joystick->y < 0) && (joystick->z < -20))
     {
-        uint8_t fast_speed = 255 - ((uint8_t) abs(joystick->z) * 5);
-        uint8_t slow_speed = 255 - ((uint8_t) abs(joystick->y) * 2);
-
-        rover_move_south_turn_ccw(fast_speed, slow_speed);
+        rover_move_south_turn_ccw(joystick->y, joystick->z);
     }
-
-    // Stand still.
     else
     {
         rover_stop();
     }
 }
 
-static void rover_move_north(const uint8_t target_speed)
+static void rover_move_north(const int8_t joystick_y)
 {
     uint8_t current_speed = OCR0A;
+    uint8_t target_speed = UINT8_MAX - ((uint8_t) joystick_y * 2);
 
     if (prev_dir != PREV_DIR_NORTH)
     {
@@ -180,9 +124,10 @@ static void rover_move_north(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_move_south(const uint8_t target_speed)
+static void rover_move_south(const int8_t joystick_y)
 {
     uint8_t current_speed = OCR0A;
+    uint8_t target_speed = UINT8_MAX - ((uint8_t) abs(joystick_y) * 2);
 
     if (prev_dir != PREV_DIR_NORTH)
     {
@@ -212,9 +157,10 @@ static void rover_move_south(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_move_west(const uint8_t target_speed)
+static void rover_move_west(const int8_t joystick_x)
 {
     uint8_t current_speed = OCR0A;
+    uint8_t target_speed = UINT8_MAX - ((uint8_t) abs(joystick_x) * 2);
 
     if (prev_dir != PREV_DIR_WEST)
     {
@@ -244,9 +190,10 @@ static void rover_move_west(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_move_east(const uint8_t target_speed)
+static void rover_move_east(const int8_t joystick_x)
 {
     uint8_t current_speed = OCR0A;
+    uint8_t target_speed = UINT8_MAX - ((uint8_t) joystick_x * 2);
 
     if (prev_dir != PREV_DIR_EAST)
     {
@@ -276,9 +223,12 @@ static void rover_move_east(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_move_north_west(const uint8_t target_speed)
+static void rover_move_north_west(const int8_t joystick_x, const int8_t joystick_y)
 {
     uint8_t current_speed = OCR0A;
+    double x = (double) abs(joystick_x);
+    double y = (double) joystick_y;
+    uint8_t target_speed = (uint8_t) ((double) UINT8_MAX - hypot(x, y));
 
     if (prev_dir != PREV_DIR_NORTH_WEST)
     {
@@ -304,9 +254,12 @@ static void rover_move_north_west(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_move_north_east(const uint8_t target_speed)
+static void rover_move_north_east(const int8_t joystick_x, const int8_t joystick_y)
 {
     uint8_t current_speed = OCR0A;
+    double x = (double) joystick_x;
+    double y = (double) joystick_y;
+    uint8_t target_speed = (uint8_t) ((double) UINT8_MAX - hypot(x, y));
 
     if (prev_dir != PREV_DIR_NORTH_EAST)
     {
@@ -332,9 +285,12 @@ static void rover_move_north_east(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_move_south_west(const uint8_t target_speed)
+static void rover_move_south_west(const int8_t joystick_x, const int8_t joystick_y)
 {
     uint8_t current_speed = OCR0A;
+    double x = (double) abs(joystick_x);
+    double y = (double) abs(joystick_y);
+    uint8_t target_speed = (uint8_t) ((double) UINT8_MAX - hypot(x, y));
 
     if (prev_dir != PREV_DIR_SOUTH_WEST)
     {
@@ -360,9 +316,12 @@ static void rover_move_south_west(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_move_south_east(const uint8_t target_speed)
+static void rover_move_south_east(const int8_t joystick_x, const int8_t joystick_y)
 {
     uint8_t current_speed = OCR0A;
+    double x = (double) joystick_x;
+    double y = (double) abs(joystick_y);
+    uint8_t target_speed = (uint8_t) ((double) UINT8_MAX - hypot(x, y));
 
     if (prev_dir != PREV_DIR_SOUTH_EAST)
     {
@@ -388,9 +347,10 @@ static void rover_move_south_east(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_rotate_cw(const uint8_t target_speed)
+static void rover_rotate_cw(const int8_t joystick_z)
 {
     uint8_t current_speed = OCR0A;
+    uint8_t target_speed = UINT8_MAX - ((uint8_t) joystick_z * 2);
 
     if (prev_dir != PREV_DIR_ROTATE_CW)
     {
@@ -420,9 +380,10 @@ static void rover_rotate_cw(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_rotate_ccw(const uint8_t target_speed)
+static void rover_rotate_ccw(const int8_t joystick_z)
 {
     uint8_t current_speed = OCR0A;
+    uint8_t target_speed = UINT8_MAX - ((uint8_t) abs(joystick_z) * 3);
 
     if (prev_dir != PREV_DIR_ROTATE_CCW)
     {
@@ -452,10 +413,12 @@ static void rover_rotate_ccw(const uint8_t target_speed)
     OCR0A = current_speed;
 }
 
-static void rover_move_north_turn_cw(const uint8_t fast_speed, const uint8_t slow_speed)
+static void rover_move_north_turn_cw(const int8_t joystick_y, const int8_t joystick_z)
 {
     uint8_t current_fast_speed = OCR0A;
     uint8_t current_slow_speed = OCR2A;
+    uint8_t fast_speed = UINT8_MAX - ((uint8_t) joystick_z * 3);
+    uint8_t slow_speed = UINT8_MAX - ((uint8_t) joystick_y * 2);
 
     if (prev_dir != PREV_DIR_NORTH_TURN_CW)
     {
@@ -495,10 +458,12 @@ static void rover_move_north_turn_cw(const uint8_t fast_speed, const uint8_t slo
     OCR2A = current_slow_speed;
 }
 
-static void rover_move_north_turn_ccw(const uint8_t fast_speed, const uint8_t slow_speed)
+static void rover_move_north_turn_ccw(const int8_t joystick_y, const int8_t joystick_z)
 {
     uint8_t current_fast_speed = OCR0A;
     uint8_t current_slow_speed = OCR2A;
+    uint8_t fast_speed = UINT8_MAX - ((uint8_t) abs(joystick_z) * 4);
+    uint8_t slow_speed = UINT8_MAX - ((uint8_t) joystick_y * 2);
 
     if (prev_dir != PREV_DIR_NORTH_TURN_CCW)
     {
@@ -538,10 +503,12 @@ static void rover_move_north_turn_ccw(const uint8_t fast_speed, const uint8_t sl
     OCR2A = current_slow_speed;
 }
 
-static void rover_move_south_turn_cw(const uint8_t fast_speed, const uint8_t slow_speed)
+static void rover_move_south_turn_cw(const int8_t joystick_y, const int8_t joystick_z)
 {
     uint8_t current_fast_speed = OCR0A;
     uint8_t current_slow_speed = OCR2A;
+    uint8_t fast_speed = UINT8_MAX - ((uint8_t) joystick_z * 3);
+    uint8_t slow_speed = UINT8_MAX - ((uint8_t) abs(joystick_y) * 2);
 
     if (prev_dir != PREV_DIR_SOUTH_TURN_CW)
     {
@@ -581,10 +548,12 @@ static void rover_move_south_turn_cw(const uint8_t fast_speed, const uint8_t slo
     OCR2A = current_slow_speed;
 }
 
-static void rover_move_south_turn_ccw(const uint8_t fast_speed, const uint8_t slow_speed)
+static void rover_move_south_turn_ccw(const int8_t joystick_y, const int8_t joystick_z)
 {
     uint8_t current_fast_speed = OCR0A;
     uint8_t current_slow_speed = OCR2A;
+    uint8_t fast_speed = UINT8_MAX - ((uint8_t) abs(joystick_z) * 5);
+    uint8_t slow_speed = UINT8_MAX - ((uint8_t) abs(joystick_y) * 2);
 
     if (prev_dir != PREV_DIR_SOUTH_TURN_CCW)
     {
@@ -628,6 +597,7 @@ static void rover_stop(void)
 {
     prev_dir = PREV_DIR_STOP;
 
+    // De-acceleration for smooth stops.
     if (OCR0A < 254)
     {
         OCR0A += 2;
