@@ -348,7 +348,7 @@ static void rover_move_south_east(const int8_t joystick_x, const int8_t joystick
 static void rover_rotate_cw(const int8_t joystick_z)
 {
     uint8_t current_speed = OCR0A;
-    uint8_t target_speed = UINT8_MAX - ((uint8_t) joystick_z * 2);
+    uint8_t target_speed = UINT8_MAX - (uint8_t) joystick_z;
 
     if (prev_dir != PREV_DIR_ROTATE_CW)
     {

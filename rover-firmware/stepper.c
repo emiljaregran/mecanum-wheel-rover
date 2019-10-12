@@ -19,7 +19,8 @@ void steppers_init(void)
     DDRC |= ((1 << DDC3) | (1 << DDC2) | (1 << DDC1) | (1 << DDC0));
     DDRD |= ((1 << DDD7) | (1 << DDD6) | (1 << DDD5) | (1 << DDD4) | (1 << DDD3) | (1 << DDD2));
 
-    PORTD |= ((1 << STEPPER_1_EN) | (1 << STEPPER_2_EN) | (1 << STEPPER_3_EN) | (1 << STEPPER_4_EN));
+    PORTB |= (1 << STEPPER_4_EN);
+    PORTD |= ((1 << STEPPER_1_EN) | (1 << STEPPER_2_EN) | (1 << STEPPER_3_EN));
 }
 
 void stepper_set_direction(const uint8_t stepper, const uint8_t direction)

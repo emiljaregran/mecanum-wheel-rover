@@ -4,6 +4,7 @@
 #define BUFFER_SIZE     100
 #define BAUDRATE        38400
 #define UBRR            (F_CPU / 16 / BAUDRATE - 1)
+#define REMOTE_TIMEOUT  200 // 200 * 5 msec = 1 sec timeout
 
 void uart_init(joystick_t * const joystick);
 void uart_read_struct(uint8_t * p_joystick, size_t data_length);

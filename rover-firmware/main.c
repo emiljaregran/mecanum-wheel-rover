@@ -28,10 +28,12 @@ int main(void)
             timer_stop_movement--;
             timer_update_movement = 0;
 
+            // Rover keeps moving for 1 sec after connection loss.
             if (0 == timer_stop_movement)
             {
                 timer_stop_movement = 1;
                 rover_stop();
+                led_off();
             }
             else
             {

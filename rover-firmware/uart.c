@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+#include "gpio.h"
 #include "rover.h"
 #include "timer.h"
 #include "uart.h"
@@ -46,7 +47,8 @@ void uart_read_struct(uint8_t * p_joystick, size_t data_length)
         }
 
         buffer_index = 0;
-        timer_stop_movement = 200;
+        timer_stop_movement = REMOTE_TIMEOUT;
+        led_on();
     }
 }
 
