@@ -1,5 +1,5 @@
-#ifndef SERIAL_H
-#define SERIAL_H
+#ifndef UART_H
+#define UART_H
 
 #define BUFFER_SIZE     100
 #define BAUDRATE        38400
@@ -10,5 +10,5 @@ void uart_read_struct(uint8_t * p_joystick, size_t data_length);
 
 int uart_putchar(char chr, FILE * stream);
 
-#endif // SERIAL_H
+#endif // UART_H
 

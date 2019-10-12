@@ -32,6 +32,7 @@ typedef struct
 extern joystick_t joystick;
 
 void rover_movement(const joystick_t const * joystick);
+void rover_stop(void);
 
 #endif // ROVER_H
 

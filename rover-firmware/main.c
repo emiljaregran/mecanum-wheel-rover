@@ -5,9 +5,9 @@
 
 #include "gpio.h"
 #include "rover.h"
-#include "serial.h"
 #include "stepper.h"
 #include "timer.h"
+#include "uart.h"
 
 int main(void)
 {
@@ -25,8 +25,18 @@ int main(void)
 
         if (timer_update_movement)
         {
+            timer_stop_movement--;
             timer_update_movement = 0;
-            rover_movement(&joystick);
+
+            if (0 == timer_stop_movement)
+            {
+                timer_stop_movement = 1;
+                rover_stop();
+            }
+            else
+            {
+                rover_movement(&joystick);
+            }
         }
     }
 

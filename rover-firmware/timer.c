@@ -5,6 +5,7 @@
 #include "timer.h"
 
 volatile uint8_t timer_update_movement = 0;
+volatile uint8_t timer_stop_movement = 0;
 
 static void timer0_init(void);
 static void timer1_init(void);

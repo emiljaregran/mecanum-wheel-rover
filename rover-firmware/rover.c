@@ -25,8 +25,6 @@ static void rover_move_north_turn_ccw(const int8_t joystick_y, const int8_t joys
 static void rover_move_south_turn_cw(const int8_t joystick_y, const int8_t joystick_z);
 static void rover_move_south_turn_ccw(const int8_t joystick_y, const int8_t joystick_z);
 
-static void rover_stop(void);
-
 void rover_movement(const joystick_t * const joystick)
 {
     if ((0 == joystick->x) && (joystick->y > 0) && (0 == joystick->z))
@@ -593,7 +591,7 @@ static void rover_move_south_turn_ccw(const int8_t joystick_y, const int8_t joys
     OCR2A = current_slow_speed;
 }
 
-static void rover_stop(void)
+void rover_stop(void)
 {
     prev_dir = PREV_DIR_STOP;
 

@@ -17,11 +17,11 @@ OUT=${BIN}.elf ${BIN}.hex ${BIN}.lss
 
 SOURCES = \
 		  main.c \
-		  serial.c \
 		  gpio.c \
 		  rover.c \
 		  stepper.c \
-		  timer.c
+		  timer.c \
+		  uart.c
 
 OBJS = $(SOURCES:.c=.o)
 

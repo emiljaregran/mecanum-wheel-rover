@@ -4,7 +4,8 @@
 #include <stdio.h>
 
 #include "rover.h"
-#include "serial.h"
+#include "timer.h"
+#include "uart.h"
 
 static volatile uint8_t buffer[BUFFER_SIZE];
 static volatile uint8_t buffer_index = 0;
@@ -45,6 +46,7 @@ void uart_read_struct(uint8_t * p_joystick, size_t data_length)
         }
 
         buffer_index = 0;
+        timer_stop_movement = 200;
     }
 }
 
