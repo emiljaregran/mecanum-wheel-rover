@@ -5,7 +5,7 @@
 #define JOYSTICK_AXIS_Y         1
 #define JOYSTICK_AXIS_Z         2
 #define JOYSTICK_AXIS_COUNT     3
-#define JOYSTICK_DEADBAND       10
+#define JOYSTICK_DEADBAND       12
 
 typedef struct
 {
