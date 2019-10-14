@@ -49,5 +49,8 @@ $(OBJS): Makefile
 flash: ${BIN}.hex
 	avrdude -F -V -c arduino -p ${MCU} -P ${PORT} -b 115200 -U flash:w:$<
 
+isp: ${BIN}.hex
+	avrdude -F -V -c avrisp2 -p ${MCU} -P ${PORT} -U flash:w:$<
+
 clean:
 	rm -f $(OUT) $(OBJS) *.map *.P *.d

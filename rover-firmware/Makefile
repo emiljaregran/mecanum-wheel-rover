@@ -7,7 +7,7 @@ AVRSIZE=avr-size
 MCU=atmega328p
 
 CFLAGS=-Wall -Wextra -Werror -Wstrict-prototypes -Wundef -pedantic \
-		-g -Og -std=gnu99 -DF_CPU=16000000UL -mmcu=${MCU}
+		-Os -std=gnu99 -DF_CPU=16000000UL -mmcu=${MCU}
 LDFLAGS=-mmcu=$(MCU)
 PORT=/dev/ttyACM0
 
@@ -48,6 +48,9 @@ $(OBJS): Makefile
 
 flash: ${BIN}.hex
 	dwdebug l ${BIN}.elf
+
+isp: ${BIN}.hex
+	avrdude -F -V -c avrisp2 -p ${MCU} -P ${PORT} -U flash:w:$<
 
 clean:
 	rm -f $(OUT) $(OBJS) *.map *.P *.d

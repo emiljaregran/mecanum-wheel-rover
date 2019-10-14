@@ -428,10 +428,10 @@ static void rover_move_north_turn_cw(const int8_t joystick_y, const int8_t joyst
         stepper_set_direction(STEPPER_3_DIR, STEPPER_FORWARD);
         stepper_set_direction(STEPPER_4_DIR, STEPPER_FORWARD);
 
-        stepper_speed.stepper_1_fast = STEPPER_MOVE;
-        stepper_speed.stepper_2_slow = STEPPER_MOVE;
-        stepper_speed.stepper_3_fast = STEPPER_MOVE;
-        stepper_speed.stepper_4_slow = STEPPER_MOVE;
+        stepper_speed.stepper_1_slow = STEPPER_MOVE;
+        stepper_speed.stepper_2_fast = STEPPER_MOVE;
+        stepper_speed.stepper_3_slow = STEPPER_MOVE;
+        stepper_speed.stepper_4_fast = STEPPER_MOVE;
     }
 
     if ((fast_speed < current_fast_speed) && (current_fast_speed > ROVER_SPEED_LIMIT))
@@ -473,10 +473,10 @@ static void rover_move_north_turn_ccw(const int8_t joystick_y, const int8_t joys
         stepper_set_direction(STEPPER_3_DIR, STEPPER_FORWARD);
         stepper_set_direction(STEPPER_4_DIR, STEPPER_FORWARD);
 
-        stepper_speed.stepper_1_slow = STEPPER_MOVE;
-        stepper_speed.stepper_2_fast = STEPPER_MOVE;
-        stepper_speed.stepper_3_slow = STEPPER_MOVE;
-        stepper_speed.stepper_4_fast = STEPPER_MOVE;
+        stepper_speed.stepper_1_fast = STEPPER_MOVE;
+        stepper_speed.stepper_2_slow = STEPPER_MOVE;
+        stepper_speed.stepper_3_fast = STEPPER_MOVE;
+        stepper_speed.stepper_4_slow = STEPPER_MOVE;
     }
 
     if ((fast_speed < current_fast_speed) && (current_fast_speed > ROVER_SPEED_LIMIT))
